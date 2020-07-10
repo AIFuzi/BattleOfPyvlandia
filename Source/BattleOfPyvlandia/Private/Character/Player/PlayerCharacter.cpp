@@ -13,8 +13,6 @@ APlayerCharacter::APlayerCharacter()
 
 	TPS_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("TPS_Camera"));
 	TPS_Camera->SetupAttachment(SpringArm);
-
-	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPose;
 }
 
 void APlayerCharacter::BeginPlay()

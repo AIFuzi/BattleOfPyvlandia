@@ -35,9 +35,6 @@ public:
 		class UCameraComponent* TPS_Camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Player)
-		class UCameraComponent* FPS_Camera;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Player)
 		class USkeletalMeshComponent* FPS_Arms;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Player)
