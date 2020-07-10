@@ -14,6 +14,7 @@ APlayerCharacter::APlayerCharacter()
 	TPS_Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("TPS_Camera"));
 	TPS_Camera->SetupAttachment(SpringArm);
 
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPose;
 }
 
 void APlayerCharacter::BeginPlay()
@@ -92,18 +93,7 @@ void APlayerCharacter::Server_Sprint_Implementation(float Val)
 	Client_Sprint(Val);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
+//==================================================================================================================================
 
 bool APlayerCharacter::Client_Sprint_Validate(float Val)
 {
