@@ -39,8 +39,6 @@ void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, SpawnLoc, SpawnRot, SpawnParams);
-	Weapon->OnRep_WeaponOwner();
-
 	CurrentWeapon = Weapon;
 	OnRep_CurrentWeapon();
 }
@@ -51,7 +49,9 @@ void UWeaponComponent::OnRep_CurrentWeapon()
 	{
 		if (CurrentWeapon)
 		{
-			CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
+			//CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
+			Weapon->WeaponOwner = PlayerOwner;
+			Weapon->OnRep_WeaponOwner();
 		}
 	}
 }
