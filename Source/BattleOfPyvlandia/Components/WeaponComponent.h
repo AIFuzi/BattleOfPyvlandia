@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -7,22 +5,35 @@
 #include "WeaponComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLEOFPYVLANDIA_API UWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UWeaponComponent();
 
 protected:
-	// Called when the game starts
+
 	virtual void BeginPlay() override;
 
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
+
+	UPROPERTY(Replicated)
+		class APlayerCharacter* PlayerOwner;
+
+	class AWeaponActor* Weapon;
+
 public:	
-	// Called every frame
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_CurrentWeapon)
+		class AWeaponActor* CurrentWeapon;
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+		void CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass);
+
+	UFUNCTION()
+		void OnRep_CurrentWeapon();
 };
