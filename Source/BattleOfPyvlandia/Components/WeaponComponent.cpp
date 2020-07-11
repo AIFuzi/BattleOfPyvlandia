@@ -5,16 +5,21 @@
 
 UWeaponComponent::UWeaponComponent()
 {
-	PrimaryComponentTick.bCanEverTick = true;
+	//PrimaryComponentTick.bCanEverTick = true;
 
-
+	SetIsReplicated(true);
 }
 
 void UWeaponComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	PlayerOwner = Cast<APlayerCharacter>(GetOwner());
+}
+
+void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
 void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -24,35 +29,30 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(UWeaponComponent, PlayerOwner);
 }
 
-void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-}
-
 void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 {
-	FVector SpawnLoc(0.f, 0.f, 0.f);
-	FRotator SpawnRot(0.f, 0.f, 0.f);
+	FVector Loc(0, 0, 0);
+	FRotator Rot(0, 0, 0);
 
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, SpawnLoc, SpawnRot, SpawnParams);
+	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, Loc, Rot, SpawnParams);
+	Weapon->SetOwner(PlayerOwner->GetController());
+	Weapon->WeaponOwner = PlayerOwner;
+	Weapon->WeaponOwner = PlayerOwner;
+	Weapon->OnRep_WeaponOwner();
+
 	CurrentWeapon = Weapon;
 	OnRep_CurrentWeapon();
 }
 
 void UWeaponComponent::OnRep_CurrentWeapon()
 {
-	if (!GetWorld()->IsServer())
+	if (CurrentWeapon)
 	{
-		if (CurrentWeapon)
-		{
-			//CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
-			Weapon->WeaponOwner = PlayerOwner;
-			Weapon->OnRep_WeaponOwner();
-		}
+		CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
+		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("Current weapon valid"));
 	}
 }
 
