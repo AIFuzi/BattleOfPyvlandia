@@ -40,7 +40,6 @@ void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, Loc, Rot, SpawnParams);
 	Weapon->SetOwner(PlayerOwner->GetController());
 	Weapon->WeaponOwner = PlayerOwner;
-	Weapon->WeaponOwner = PlayerOwner;
 	Weapon->OnRep_WeaponOwner();
 
 	CurrentWeapon = Weapon;
@@ -52,7 +51,6 @@ void UWeaponComponent::OnRep_CurrentWeapon()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
-		GEngine->AddOnScreenDebugMessage(1, 5.f, FColor::Green, TEXT("Current weapon valid"));
 	}
 }
 

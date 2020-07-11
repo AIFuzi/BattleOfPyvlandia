@@ -28,7 +28,7 @@ public:
 	UPROPERTY(Replicated)
 		class APlayerCharacter* PlayerOwner;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, ReplicatedUsing = OnRep_CurrentWeapon)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_CurrentWeapon)
 		class AWeaponActor* CurrentWeapon;
 
 	UFUNCTION(BlueprintCallable, Category = Weapon)
