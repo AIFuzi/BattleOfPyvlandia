@@ -5,6 +5,7 @@
 #include "Components/SkeletalMeshComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Kismet/GameplayStatics.h"
+#include "../Components/WeaponComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
