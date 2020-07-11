@@ -80,8 +80,8 @@ void AWeaponActor::GetShootTrace()
 
 void AWeaponActor::DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation)
 {
-	DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 5.f, 1, 0.f);
-	DrawDebugSphere(GetWorld(), HitLocation, 30.f, 12, FColor::Red, false, 5.f, 1, 0.f);
+	DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 5.f, 0, 0.f);
+	DrawDebugSphere(GetWorld(), HitLocation, 15.f, 12, FColor::Red, false, 5.f, 0, 0.f);
 }
 
 bool AWeaponActor::DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLocation)
