@@ -17,24 +17,28 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const;
-
+	void GetShootTrace();
+	
 public:	
 
 	virtual void Tick(float DeltaTime) override;
 
+	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
+
+	UFUNCTION(BlueprintCallable, Category = Test)
+		void UseWeapon();
+
+public:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_WeaponOwner)
 		class APlayerCharacter* WeaponOwner;
-
-	UFUNCTION(BlueprintCallable, Category = Shooting)
-		void GetShootTrace();
 
 	UFUNCTION()
 		void OnRep_WeaponOwner();
 
-	UFUNCTION(NetMulticast, Reliable, WithValidation, Category = Debug)
-		void DrawDebugTrace(FVector Start, FVector End, FVector HitLoc, AActor* HitActor);
-		void DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLoc, AActor* HitActor);
-		bool DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLoc, AActor* HitActor);
-
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+		void DrawDebugTrace(FVector Start, FVector End, FVector HitLocation);
+		void DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation);
+		bool DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLocation);
+		
 };

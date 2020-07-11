@@ -16,15 +16,8 @@ AWeaponActor::AWeaponActor()
 void AWeaponActor::BeginPlay()
 {
 	Super::BeginPlay();
-}
 
-void AWeaponActor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AWeaponActor, WeaponOwner);
-
-
+	WeaponOwner = Cast<APlayerCharacter>(GetOwner());
 }
 
 void AWeaponActor::Tick(float DeltaTime)
@@ -33,17 +26,11 @@ void AWeaponActor::Tick(float DeltaTime)
 
 }
 
-void AWeaponActor::GetShootTrace()
+void AWeaponActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
-	FHitResult HitOut;
-	APlayerCharacter* Player = Cast<APlayerCharacter>(GetInstigator());
-	if (Player)
-	{
-		FVector Start = Player->TPS_Camera->GetComponentLocation();
-		FVector End = Start + (Player->TPS_Camera->GetForwardVector() * 10000.f);
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-		DrawDebugTrace(Start, End, End, nullptr);
-	}
+	DOREPLIFETIME(AWeaponActor, WeaponOwner);
 }
 
 void AWeaponActor::OnRep_WeaponOwner()
@@ -52,28 +39,52 @@ void AWeaponActor::OnRep_WeaponOwner()
 	{
 		SetInstigator(WeaponOwner);
 		SetOwner(GetInstigator()->GetController());
-
-		if (GetLocalRole() != ROLE_Authority)
+		if (GetLocalRole() == ROLE_Authority)
 			AttachToActor(WeaponOwner, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		else
 			AttachToComponent(WeaponOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
 	}
 	else
 	{
-		DetachFromActor(FDetachmentTransformRules::KeepRelativeTransform);
-		SetInstigator(nullptr);
 		SetOwner(nullptr);
+		SetInstigator(nullptr);
 	}
 }
 
-void AWeaponActor::DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLoc, AActor* HitActor)
+void AWeaponActor::UseWeapon()
 {
-	DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 5.f, 0, 0.f);
-	DrawDebugSphere(GetWorld(), HitLoc, 15.f, 12, FColor::Green, false, 5.f, 0, 0.f);
+	GetShootTrace();
 }
 
-bool AWeaponActor::DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLoc, AActor* HitActor)
+void AWeaponActor::GetShootTrace()
+{
+	FHitResult HitResult;
+
+	FVector Start = WeaponOwner->TPS_Camera->GetComponentLocation();
+	FVector End = Start + (WeaponOwner->TPS_Camera->GetForwardVector() * 10000.f);
+
+	FCollisionQueryParams CollisionParams;
+	FCollisionObjectQueryParams CollisionTrace;
+
+	CollisionTrace.AllObjects;
+
+	CollisionParams.AddIgnoredActor(this);
+	CollisionParams.AddIgnoredActor(WeaponOwner);
+
+	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
+	if (IsHit)
+	{
+		DrawDebugTrace(Start, End, HitResult.Location);
+	}
+}
+
+void AWeaponActor::DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation)
+{
+	DrawDebugLine(GetWorld(), Start, End, FColor::Purple, false, 5.f, 1, 0.f);
+	DrawDebugSphere(GetWorld(), HitLocation, 30.f, 12, FColor::Red, false, 5.f, 1, 0.f);
+}
+
+bool AWeaponActor::DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLocation)
 {
 	return true;
 }
-
