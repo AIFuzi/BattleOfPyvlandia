@@ -7,6 +7,16 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadFinished);
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	Autorifle			UMETA(DisplayName = "Autorifle"),
+	Pistol				UMETA(DisplayName = "Pistol"),
+	SMG					UMETA(DisplayName = "SMG"),
+	Shotgun				UMETA(DisplayName = "Shotgun"),
+	Sniper				UMETA(DisplayName = "Sniper")
+};
+
 UCLASS()
 class BATTLEOFPYVLANDIA_API AWeaponActor : public AActor
 {
@@ -28,6 +38,7 @@ protected:
 	bool IsReload;
 
 	FTimerHandle ReloadTimer;
+	FTimerHandle ShootingTimer;
 
 	bool AbleToReload();
 	void StartReload();
@@ -38,6 +49,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		EWeaponType WeaponType;
 
 	UPROPERTY(BlueprintAssignable, Category = Reload)
 		FReloadStarted OnReloadStarted;
@@ -60,8 +74,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Reload)
 		float ReloadSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Shooting)
+		float ShootingSpeed;
+
 	UFUNCTION(BlueprintCallable, Category = Shooting)
 		void UseWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = Shooting)
+		void StopUseWeapon();
 
 	UFUNCTION(BlueprintPure, Category = Shooting)
 		FVector GetShootDirection();

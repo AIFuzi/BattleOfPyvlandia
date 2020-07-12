@@ -36,6 +36,7 @@ void AWeaponActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& O
 	DOREPLIFETIME(AWeaponActor, Ammo);
 	DOREPLIFETIME(AWeaponActor, CurrentAmmo);
 	DOREPLIFETIME(AWeaponActor, TotalAmmo);
+	DOREPLIFETIME(AWeaponActor, ShootingSpeed);
 }
 
 void AWeaponActor::OnRep_WeaponOwner()
@@ -58,8 +59,17 @@ void AWeaponActor::OnRep_WeaponOwner()
 
 void AWeaponActor::UseWeapon()
 {
-	GetShootTrace();
-	CurrentAmmo--;
+	switch (WeaponType)
+	{
+	case EWeaponType::Autorifle:
+		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
+		break;
+	}
+}
+
+void AWeaponActor::StopUseWeapon()
+{
+	GetWorld()->GetTimerManager().ClearTimer(ShootingTimer);
 }
 
 FVector AWeaponActor::GetShootDirection()
@@ -87,7 +97,7 @@ FVector AWeaponActor::GetShootDirection()
 
 bool AWeaponActor::AbleForUseWeapon()
 {
-	if (CurrentAmmo > 0) return true;
+	if (CurrentAmmo > 0 && !Reloading) return true;
 	else return false;
 }
 
@@ -105,6 +115,9 @@ void AWeaponActor::GetShootTrace()
 
 	CollisionParams.AddIgnoredActor(this);
 	CollisionParams.AddIgnoredActor(WeaponOwner);
+
+	CurrentAmmo--;
+	if (CurrentAmmo < 1) StopUseWeapon();
 
 	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
 	if (IsHit)
