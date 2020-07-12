@@ -46,6 +46,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Player)
 		bool IsSprint;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Player)
+		FVector LookAngle;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Player)
+		float LookVerticaleAngle;
+
 	UFUNCTION(NetMulticast, Reliable, WithValidation, Category = Movement)
 		void Client_Sprint(float Val);
 		void Client_Sprint_Implementation(float Val);

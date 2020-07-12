@@ -32,6 +32,9 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(APlayerCharacter, LookAngle);
+	DOREPLIFETIME(APlayerCharacter, LookVerticaleAngle);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
