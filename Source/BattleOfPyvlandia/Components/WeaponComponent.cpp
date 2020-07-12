@@ -7,7 +7,7 @@ UWeaponComponent::UWeaponComponent()
 {
 	//PrimaryComponentTick.bCanEverTick = true;
 
-	SetIsReplicated(true);
+	//SetIsReplicated(true);
 }
 
 void UWeaponComponent::BeginPlay()
