@@ -2,6 +2,7 @@
 #include "Net/UnrealNetwork.h"
 #include "..//Public/Character/Player/PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -56,12 +57,35 @@ void AWeaponActor::UseWeapon()
 	GetShootTrace();
 }
 
+FVector AWeaponActor::GetShootDirection()
+{
+	float SpreadAngle;
+	FVector SpreadRight;
+	FVector SpreadUp;
+
+	if (WeaponOwner)
+	{
+		SpreadAngle = FMath::RandRange(Spread * (-1.f), Spread);
+
+		FVector OwnerRotaion = UKismetMathLibrary::RotateAngleAxis(
+			WeaponOwner->GetActorForwardVector(),
+			WeaponOwner->LookVerticaleAngle * (-1.f),
+			WeaponOwner->GetActorRightVector());
+
+		SpreadRight = UKismetMathLibrary::RotateAngleAxis(OwnerRotaion, SpreadAngle, OwnerRotaion.RightVector);
+
+		SpreadUp = UKismetMathLibrary::RotateAngleAxis(SpreadRight, SpreadAngle, OwnerRotaion.UpVector);
+	}
+
+	return SpreadUp;
+}
+
 void AWeaponActor::GetShootTrace()
 {
 	FHitResult HitResult;
 
-	FVector Start = WeaponOwner->TPS_Camera->GetComponentLocation();
-	FVector End = Start + (WeaponOwner->TPS_Camera->GetForwardVector() * 10000.f);
+	FVector Start = WeaponOwner->GetMesh()->GetSocketLocation("Sk_Weapon");
+	FVector End = Start + (GetShootDirection() * 10000.f);
 
 	FCollisionQueryParams CollisionParams;
 	FCollisionObjectQueryParams CollisionTrace;
@@ -76,6 +100,11 @@ void AWeaponActor::GetShootTrace()
 	{
 		DrawDebugTrace(Start, End, HitResult.Location);
 	}
+}
+
+void AWeaponActor::DrawInfo()
+{
+
 }
 
 void AWeaponActor::DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation)

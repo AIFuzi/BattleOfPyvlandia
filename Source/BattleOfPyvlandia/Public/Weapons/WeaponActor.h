@@ -18,6 +18,8 @@ protected:
 	virtual void BeginPlay() override;
 
 	void GetShootTrace();
+
+	void DrawInfo();
 	
 public:	
 
@@ -25,8 +27,16 @@ public:
 
 	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 
-	UFUNCTION(BlueprintCallable, Category = Test)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreanAndRecoil)
+		float Spread;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Ammo)
+
+	UFUNCTION(BlueprintCallable, Category = Shooting)
 		void UseWeapon();
+
+	UFUNCTION(BlueprintPure, Category = Shooting)
+		FVector GetShootDirection();
 
 public:
 
@@ -40,5 +50,9 @@ public:
 		void DrawDebugTrace(FVector Start, FVector End, FVector HitLocation);
 		void DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation);
 		bool DrawDebugTrace_Validate(FVector Start, FVector End, FVector HitLocation);
+
+private:
+
+	int Ammo;
 		
 };
