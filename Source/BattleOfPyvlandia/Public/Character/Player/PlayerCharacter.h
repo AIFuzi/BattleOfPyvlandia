@@ -52,6 +52,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Replicated, Category = Player)
 		float LookVerticaleAngle;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Replicated, Category = Animation)
+		bool Reload;
+
 	UFUNCTION(NetMulticast, Reliable, WithValidation, Category = Movement)
 		void Client_Sprint(float Val);
 		void Client_Sprint_Implementation(float Val);

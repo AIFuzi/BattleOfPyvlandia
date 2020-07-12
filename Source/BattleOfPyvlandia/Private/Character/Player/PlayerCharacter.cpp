@@ -35,6 +35,8 @@ void APlayerCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 	DOREPLIFETIME(APlayerCharacter, LookAngle);
 	DOREPLIFETIME(APlayerCharacter, LookVerticaleAngle);
+
+	DOREPLIFETIME(APlayerCharacter, Reload);
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
