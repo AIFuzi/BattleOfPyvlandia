@@ -50,6 +50,7 @@ void UWeaponComponent::OnRep_CurrentWeapon()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
+		CurrentWeapon = Weapon;
 	}
 }
 
