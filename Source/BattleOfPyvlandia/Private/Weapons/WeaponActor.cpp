@@ -25,7 +25,6 @@ void AWeaponActor::BeginPlay()
 void AWeaponActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AWeaponActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -33,6 +32,10 @@ void AWeaponActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& O
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AWeaponActor, WeaponOwner);
+
+	DOREPLIFETIME(AWeaponActor, Ammo);
+	DOREPLIFETIME(AWeaponActor, CurrentAmmo);
+	DOREPLIFETIME(AWeaponActor, TotalAmmo);
 }
 
 void AWeaponActor::OnRep_WeaponOwner()
@@ -56,6 +59,7 @@ void AWeaponActor::OnRep_WeaponOwner()
 void AWeaponActor::UseWeapon()
 {
 	GetShootTrace();
+	CurrentAmmo--;
 }
 
 FVector AWeaponActor::GetShootDirection()
@@ -109,9 +113,55 @@ void AWeaponActor::GetShootTrace()
 	}
 }
 
-void AWeaponActor::DrawInfo()
+bool AWeaponActor::AbleToReload()
 {
+	if (CurrentAmmo != Ammo && !IsReload && TotalAmmo > 0) return true;
+	else return false;
+}
 
+void AWeaponActor::StartReload()
+{
+	if (!Reloading)
+	{
+		IsReload = true;
+		Reloading = true;
+		OnRep_Reloading();
+
+		WeaponOwner->Reload = true;
+	}
+}
+
+void AWeaponActor::StopReload()
+{
+	Reloading = false;
+	OnRep_Reloading();
+
+	IsReload = false;
+
+	CurrentAmmo = CurrentAmmo + AmmoForReload;
+	TotalAmmo = TotalAmmo - AmmoForReload;
+
+	WeaponOwner->Reload = false;
+}
+
+void AWeaponActor::ReloadWeapon()
+{
+	if (AbleToReload()) StartReload();
+}
+
+void AWeaponActor::OnRep_Reloading()
+{
+	if (Reloading)
+	{
+		GetWorld()->GetTimerManager().SetTimer(ReloadTimer, this, &AWeaponActor::StopReload, ReloadSpeed, false);
+		AmmoForReload = FMath::Min(Ammo - CurrentAmmo, TotalAmmo);
+		OnReloadStarted.Broadcast();
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(ReloadTimer);
+		OnReloadFinished.Broadcast();
+	}
 }
 
 void AWeaponActor::DrawDebugTrace_Implementation(FVector Start, FVector End, FVector HitLocation)

@@ -4,6 +4,9 @@
 #include "GameFramework/Actor.h"
 #include "WeaponActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadStarted);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadFinished);
+
 UCLASS()
 class BATTLEOFPYVLANDIA_API AWeaponActor : public AActor
 {
@@ -19,13 +22,28 @@ protected:
 
 	void GetShootTrace();
 
-	void DrawInfo();
+
+protected:
+
+	bool IsReload;
+
+	FTimerHandle ReloadTimer;
+
+	bool AbleToReload();
+	void StartReload();
+	void StopReload();
 	
 public:	
 
 	virtual void Tick(float DeltaTime) override;
 
 	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
+
+	UPROPERTY(BlueprintAssignable, Category = Reload)
+		FReloadStarted OnReloadStarted;
+
+	UPROPERTY(BlueprintAssignable, Category = Reload)
+		FReloadFinished OnReloadFinished;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreanAndRecoil)
 		float Spread;
@@ -39,6 +57,9 @@ public:
 	UPROPERTY(BlueprintReadOnly, Replicated, Category = Ammo)
 		int AmmoForReload;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Reload)
+		float ReloadSpeed;
+
 	UFUNCTION(BlueprintCallable, Category = Shooting)
 		void UseWeapon();
 
@@ -48,10 +69,19 @@ public:
 	UFUNCTION(BlueprintPure, Category = Shooting)
 		bool AbleForUseWeapon();
 
+	UFUNCTION(BlueprintCallable, Category = Reload)
+		void ReloadWeapon();
+
 public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_WeaponOwner)
 		class APlayerCharacter* WeaponOwner;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, ReplicatedUsing = OnRep_Reloading, Category = Reload)
+		bool Reloading;
+
+	UFUNCTION()
+		virtual void OnRep_Reloading();
 
 	UFUNCTION()
 		void OnRep_WeaponOwner();
@@ -63,6 +93,7 @@ public:
 
 private:
 
-	int Ammo;
+	UPROPERTY(Replicated)
+		int Ammo;
 		
 };
