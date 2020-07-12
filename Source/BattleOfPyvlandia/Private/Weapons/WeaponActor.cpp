@@ -19,6 +19,7 @@ void AWeaponActor::BeginPlay()
 	Super::BeginPlay();
 
 	WeaponOwner = Cast<APlayerCharacter>(GetOwner());
+	Ammo = CurrentAmmo;
 }
 
 void AWeaponActor::Tick(float DeltaTime)
@@ -78,6 +79,12 @@ FVector AWeaponActor::GetShootDirection()
 	}
 
 	return SpreadUp;
+}
+
+bool AWeaponActor::AbleForUseWeapon()
+{
+	if (CurrentAmmo > 0) return true;
+	else return false;
 }
 
 void AWeaponActor::GetShootTrace()

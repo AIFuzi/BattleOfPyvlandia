@@ -31,12 +31,22 @@ public:
 		float Spread;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Ammo)
+		int CurrentAmmo;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Ammo)
+		int TotalAmmo;
+
+	UPROPERTY(BlueprintReadOnly, Replicated, Category = Ammo)
+		int AmmoForReload;
 
 	UFUNCTION(BlueprintCallable, Category = Shooting)
 		void UseWeapon();
 
 	UFUNCTION(BlueprintPure, Category = Shooting)
 		FVector GetShootDirection();
+
+	UFUNCTION(BlueprintPure, Category = Shooting)
+		bool AbleForUseWeapon();
 
 public:
 
