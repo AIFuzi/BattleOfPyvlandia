@@ -38,7 +38,6 @@ void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, Loc, Rot, SpawnParams);
-	Weapon->SetOwner(PlayerOwner->GetController());
 	Weapon->WeaponOwner = PlayerOwner;
 	Weapon->OnRep_WeaponOwner();
 
