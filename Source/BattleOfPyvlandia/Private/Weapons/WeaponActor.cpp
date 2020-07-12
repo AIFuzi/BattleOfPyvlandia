@@ -3,6 +3,7 @@
 #include "..//Public/Character/Player/PlayerCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 #include "DrawDebugHelpers.h"
 
@@ -122,7 +123,9 @@ void AWeaponActor::GetShootTrace()
 	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
 	if (IsHit)
 	{
+
 		DrawDebugTrace(Start, End, HitResult.Location);
+		UGameplayStatics::ApplyDamage(HitResult.GetActor(), 10.f, GetInstigatorController(), WeaponOwner, UDamageType::StaticClass());
 	}
 }
 
