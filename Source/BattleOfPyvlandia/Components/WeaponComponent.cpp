@@ -41,8 +41,11 @@ void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 	Weapon->WeaponOwner = PlayerOwner;
 	Weapon->OnRep_WeaponOwner();
 
-	CurrentWeapon = Weapon;
-	OnRep_CurrentWeapon();
+	if (!CurrentWeapon)
+	{
+		CurrentWeapon = Weapon;
+		OnRep_CurrentWeapon();
+	}
 }
 
 void UWeaponComponent::OnRep_CurrentWeapon()
@@ -50,7 +53,7 @@ void UWeaponComponent::OnRep_CurrentWeapon()
 	if (CurrentWeapon)
 	{
 		CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
-		CurrentWeapon = Weapon;
+		CurrentWeapon->SetOwner(PlayerOwner);
 	}
 }
 
