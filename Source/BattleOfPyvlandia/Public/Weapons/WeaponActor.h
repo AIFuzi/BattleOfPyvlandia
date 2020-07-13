@@ -59,6 +59,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = Reload)
 		FReloadFinished OnReloadFinished;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage)
+		float Damage;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreanAndRecoil)
 		float Spread;
 

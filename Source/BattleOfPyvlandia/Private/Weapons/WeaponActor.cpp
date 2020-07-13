@@ -125,7 +125,7 @@ void AWeaponActor::GetShootTrace()
 	{
 
 		DrawDebugTrace(Start, End, HitResult.Location);
-		UGameplayStatics::ApplyDamage(HitResult.GetActor(), 10.f, GetInstigatorController(), WeaponOwner, UDamageType::StaticClass());
+		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, GetInstigatorController(), WeaponOwner, UDamageType::StaticClass());
 	}
 }
 
