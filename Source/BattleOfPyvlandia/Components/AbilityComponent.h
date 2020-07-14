@@ -16,7 +16,30 @@ public:
 
 protected:
 
+	FTimerHandle SpawnDelayTimer;
+
 	virtual void BeginPlay() override;
 
-		
+	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
+
+	void SpawnDelay();
+
+	UPROPERTY(Replicated)
+		class APlayerCharacter* PlayerOwner;
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grenade)
+		int GrenadeCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawn)
+		float SpawnDelayRate;
+
+	UFUNCTION(BlueprintCallable, Category = Spawn)
+		void SpawnObject(TSubclassOf<AActor> SpawnedObject);
+
+	UFUNCTION(BlueprintPure, Category = Spawn)
+		bool AbleToSpawnObject();
+
+
 };
