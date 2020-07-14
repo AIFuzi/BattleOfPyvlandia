@@ -6,6 +6,7 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FReloadFinished);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayWeaponEffect);
 
 UENUM(BlueprintType)
 enum class EWeaponType : uint8
@@ -15,6 +16,13 @@ enum class EWeaponType : uint8
 	SMG					UMETA(DisplayName = "SMG"),
 	Shotgun				UMETA(DisplayName = "Shotgun"),
 	Sniper				UMETA(DisplayName = "Sniper")
+};
+
+UENUM(BlueprintType)
+enum class EWeaponSelectType : uint8
+{
+	MainWeapon			UMETA(DisplayName = "MainWeapon"),
+	Secondary			UMETA(DisplayName = "Secondary")
 };
 
 UCLASS()
@@ -53,17 +61,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
 		EWeaponType WeaponType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+		EWeaponSelectType WeaponSelectType;
+
 	UPROPERTY(BlueprintAssignable, Category = Reload)
 		FReloadStarted OnReloadStarted;
 
 	UPROPERTY(BlueprintAssignable, Category = Reload)
 		FReloadFinished OnReloadFinished;
 
+	UPROPERTY(BlueprintAssignable, Category = SpreadAndRecoil)
+		FPlayWeaponEffect OnPlayWeaponEffect;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Damage)
 		float Damage;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreanAndRecoil)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreadAndRecoil)
 		float Spread;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SpreadAndRecoil)
+		float RecoilStrenght;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Ammo)
 		int CurrentAmmo;

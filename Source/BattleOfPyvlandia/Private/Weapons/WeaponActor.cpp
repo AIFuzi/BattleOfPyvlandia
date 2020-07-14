@@ -120,6 +120,8 @@ void AWeaponActor::GetShootTrace()
 	CurrentAmmo--;
 	if (CurrentAmmo < 1) StopUseWeapon();
 
+	OnPlayWeaponEffect.Broadcast();
+
 	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
 	if (IsHit)
 	{
