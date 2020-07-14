@@ -34,6 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 		void CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass);
 
+
 public:
 
 	UFUNCTION()
