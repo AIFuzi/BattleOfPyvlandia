@@ -28,11 +28,15 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UHealthComponent::GetDamage(float Damage)
+void UHealthComponent::GetDamage(float Damage, bool& CharacterDeath)
 {
-	Health -= Damage;
+	Health = Health - Damage;
 	Health = FMath::Max(0.f, Health);
-	if (Health <= 0.f) OnHealthEnded.Broadcast();
+	if (Health <= 0.f)
+	{
+		OnHealthEnded.Broadcast();
+		CharacterDeath = true;
+	}
 }
 
  

@@ -35,5 +35,5 @@ public:
 		FHealthEnded OnHealthEnded;
 
 	UFUNCTION(BlueprintCallable, Category = Health)
-		void GetDamage(float Damage);
+		void GetDamage(float Damage, bool & CharacterDeath);
 };
