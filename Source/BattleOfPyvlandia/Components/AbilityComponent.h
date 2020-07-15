@@ -29,8 +29,11 @@ protected:
 
 public:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Grenade)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Grenade)
 		int GrenadeCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Grenade)
+		int AbilityCount;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Spawn)
 		float SpawnDelayRate;
@@ -38,8 +41,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Spawn)
 		void SpawnGrenade(TSubclassOf<AActor> SpawnedObject);
 
+	UFUNCTION(BlueprintCallable, Category = Spawn)
+		void SpawnAbilityObject(TSubclassOf<AActor> AbilityObject);
+
 	UFUNCTION(BlueprintPure, Category = Spawn)
 		bool AbleToSpawnGrenade();
 
+	UFUNCTION(BlueprintPure, Category = Spawn)
+		bool AbleToUseAbility();
 
 };
