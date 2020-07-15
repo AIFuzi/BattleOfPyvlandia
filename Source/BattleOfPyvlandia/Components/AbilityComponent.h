@@ -4,6 +4,13 @@
 #include "Components/ActorComponent.h"
 #include "AbilityComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class EAbilityType : uint8
+{
+	Assault				UMETA(DisplayName = "Assault"),
+	Medic				UMETA(DisplayName = "Medic"),
+	Engineer			UMETA(DisplayName = "Engineer")
+};
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class BATTLEOFPYVLANDIA_API UAbilityComponent : public UActorComponent
@@ -17,17 +24,25 @@ public:
 protected:
 
 	FTimerHandle SpawnDelayTimer;
+	FTimerHandle RestoreAbilityTimer;
 
 	virtual void BeginPlay() override;
 
 	void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const;
 
 	void SpawnDelay();
+	void AbilityCountRestore();
+	void RestoreAbility();
 
 	UPROPERTY(Replicated)
 		class APlayerCharacter* PlayerOwner;
 
+	float RestoreTime;
+
 public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Ability)
+		EAbilityType AbilityType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Grenade)
 		int GrenadeCount;

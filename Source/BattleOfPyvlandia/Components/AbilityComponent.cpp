@@ -60,12 +60,37 @@ void UAbilityComponent::SpawnAbilityObject(TSubclassOf<AActor> AbilityObject)
 		GetWorld()->GetTimerManager().SetTimer(SpawnDelayTimer, this, &UAbilityComponent::SpawnDelay, SpawnDelayRate);
 
 		AbilityCount--;
+
+		AbilityCountRestore();
 	}
 }
 
 void UAbilityComponent::SpawnDelay()
 {
 	GetWorld()->GetTimerManager().ClearTimer(SpawnDelayTimer);
+}
+
+void UAbilityComponent::AbilityCountRestore()
+{
+	switch (AbilityType)
+	{
+	case EAbilityType::Assault:
+		RestoreTime = 10.f;
+		break;
+	case EAbilityType::Medic:
+		RestoreTime = 20.f;
+		break;
+	case EAbilityType::Engineer:
+		RestoreTime = 35.f;
+		break;
+	}
+	GetWorld()->GetTimerManager().SetTimer(RestoreAbilityTimer, this, &UAbilityComponent::RestoreAbility, RestoreTime, true);
+}
+
+void UAbilityComponent::RestoreAbility()
+{
+	if(AbilityCount >= 2.f) GetWorld()->GetTimerManager().ClearTimer(RestoreAbilityTimer);
+	AbilityCount++;
 }
 
 bool UAbilityComponent::AbleToSpawnGrenade()
