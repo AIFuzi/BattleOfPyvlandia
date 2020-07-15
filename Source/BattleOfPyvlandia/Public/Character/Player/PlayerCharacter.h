@@ -4,6 +4,14 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+//UENUM(BlueprintType)
+//enum class EClassType : uint8
+//{
+//	Assault				UMETA(DisplayName = "Assault"),
+//	Medic				UMETA(DisplayName = "Medic"),
+//	Engineer			UMETA(DisplayName = "Engineer")
+//};
+
 UCLASS()
 class BATTLEOFPYVLANDIA_API APlayerCharacter : public ACharacter
 {
@@ -36,6 +44,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Player)
 		class USkeletalMeshComponent* FPS_Arms;
+
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Weapon)
+	//	EClassType PlayerClassType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Player)
 		float WalkSpeed;
