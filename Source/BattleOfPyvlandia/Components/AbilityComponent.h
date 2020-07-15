@@ -36,10 +36,10 @@ public:
 		float SpawnDelayRate;
 
 	UFUNCTION(BlueprintCallable, Category = Spawn)
-		void SpawnObject(TSubclassOf<AActor> SpawnedObject);
+		void SpawnGrenade(TSubclassOf<AActor> SpawnedObject);
 
 	UFUNCTION(BlueprintPure, Category = Spawn)
-		bool AbleToSpawnObject();
+		bool AbleToSpawnGrenade();
 
 
 };

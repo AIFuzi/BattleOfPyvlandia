@@ -38,6 +38,8 @@ void AWeaponActor::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& O
 	DOREPLIFETIME(AWeaponActor, CurrentAmmo);
 	DOREPLIFETIME(AWeaponActor, TotalAmmo);
 	DOREPLIFETIME(AWeaponActor, ShootingSpeed);
+	DOREPLIFETIME(AWeaponActor, ShotgunShootCount);
+	DOREPLIFETIME(AWeaponActor, CooldownDelay);
 }
 
 void AWeaponActor::OnRep_WeaponOwner()
@@ -64,6 +66,17 @@ void AWeaponActor::UseWeapon()
 	{
 	case EWeaponType::Autorifle:
 		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
+		break;
+	case EWeaponType::Pistol:
+		GetShootTrace();
+		break;
+	case EWeaponType::SMG:
+		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
+		break;
+	case EWeaponType::Shotgun:
+		for (int i = 0; i < ShotgunShootCount; i++) GetShootTrace();
+		GetWorld()->GetTimerManager().SetTimer(CooldownTimer, this, &AWeaponActor::StopCooldown, CooldownDelay, false);
+		CurrentAmmo--;
 		break;
 	}
 }
@@ -98,7 +111,7 @@ FVector AWeaponActor::GetShootDirection()
 
 bool AWeaponActor::AbleForUseWeapon()
 {
-	if (CurrentAmmo > 0 && !Reloading) return true;
+	if (CurrentAmmo > 0 && !Reloading && !CooldownTimer.IsValid()) return true;
 	else return false;
 }
 
@@ -117,7 +130,7 @@ void AWeaponActor::GetShootTrace()
 	CollisionParams.AddIgnoredActor(this);
 	CollisionParams.AddIgnoredActor(WeaponOwner);
 
-	CurrentAmmo--;
+	if (ShotgunShootCount <= 0) CurrentAmmo--;
 	if (CurrentAmmo < 1) StopUseWeapon();
 
 	OnPlayWeaponEffect.Broadcast();
@@ -160,6 +173,11 @@ void AWeaponActor::StopReload()
 	TotalAmmo = TotalAmmo - AmmoForReload;
 
 	WeaponOwner->Reload = false;
+}
+
+void AWeaponActor::StopCooldown()
+{
+	GetWorld()->GetTimerManager().ClearTimer(CooldownTimer);
 }
 
 void AWeaponActor::ReloadWeapon()

@@ -22,9 +22,9 @@ void UAbilityComponent::GetLifetimeReplicatedProps(TArray<class FLifetimePropert
 	DOREPLIFETIME(UAbilityComponent, PlayerOwner);
 }
 
-void UAbilityComponent::SpawnObject(TSubclassOf<AActor> SpawnedObject)
+void UAbilityComponent::SpawnGrenade(TSubclassOf<AActor> SpawnedObject)
 {
-	if (PlayerOwner && AbleToSpawnObject())
+	if (PlayerOwner && AbleToSpawnGrenade())
 	{
 		FVector SpawnLoc(PlayerOwner->GetActorLocation() + (PlayerOwner->GetActorForwardVector() * 100.f));
 		SpawnLoc = FVector(SpawnLoc.X, SpawnLoc.Y, SpawnLoc.Z + 50.f);
@@ -44,7 +44,7 @@ void UAbilityComponent::SpawnDelay()
 	GetWorld()->GetTimerManager().ClearTimer(SpawnDelayTimer);
 }
 
-bool UAbilityComponent::AbleToSpawnObject()
+bool UAbilityComponent::AbleToSpawnGrenade()
 {
 	if (!SpawnDelayTimer.IsValid() && GrenadeCount > 0) return true;
 	else return false;

@@ -47,10 +47,13 @@ protected:
 
 	FTimerHandle ReloadTimer;
 	FTimerHandle ShootingTimer;
+	FTimerHandle CooldownTimer;
 
 	bool AbleToReload();
 	void StartReload();
 	void StopReload();
+
+	void StopCooldown();
 	
 public:	
 
@@ -96,6 +99,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Shooting)
 		float ShootingSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Shooting)
+		int ShotgunShootCount;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Replicated, Category = Shooting)
+		float CooldownDelay;
 
 	UFUNCTION(BlueprintCallable, Category = Shooting)
 		void UseWeapon();
