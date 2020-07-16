@@ -31,20 +31,23 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 {
-	FVector Loc(0, 0, 0);
-	FRotator Rot(0, 0, 0);
-
-	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, Loc, Rot, SpawnParams);
-	Weapon->WeaponOwner = PlayerOwner;
-	Weapon->OnRep_WeaponOwner();
-
-	if (!CurrentWeapon)
+	if (WeaponClass)
 	{
-		CurrentWeapon = Weapon;
-		OnRep_CurrentWeapon();
+		FVector Loc(0, 0, 0);
+		FRotator Rot(0, 0, 0);
+
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		Weapon = GetWorld()->SpawnActor<AWeaponActor>(WeaponClass, Loc, Rot, SpawnParams);
+		Weapon->WeaponOwner = PlayerOwner;
+		Weapon->OnRep_WeaponOwner();
+
+		if (!CurrentWeapon)
+		{
+			CurrentWeapon = Weapon;
+			OnRep_CurrentWeapon();
+		}
 	}
 }
 
