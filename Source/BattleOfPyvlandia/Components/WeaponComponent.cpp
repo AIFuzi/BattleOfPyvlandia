@@ -31,7 +31,7 @@ void UWeaponComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 {
-	if (WeaponClass)
+	if (WeaponClass && PlayerOwner)
 	{
 		FVector Loc(0, 0, 0);
 		FRotator Rot(0, 0, 0);
@@ -53,7 +53,7 @@ void UWeaponComponent::CreateWeapon(TSubclassOf<class AWeaponActor> WeaponClass)
 
 void UWeaponComponent::OnRep_CurrentWeapon()
 {
-	if (CurrentWeapon)
+	if (CurrentWeapon && PlayerOwner)
 	{
 		CurrentWeapon->AttachToComponent(PlayerOwner->GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("Sk_Weapon"));
 		CurrentWeapon->SetOwner(PlayerOwner);
