@@ -9,6 +9,7 @@ public class BattleOfPyvlandiaServerTarget : TargetRules
 	public BattleOfPyvlandiaServerTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Server;
+		DefaultBuildSettings = BuildSettingsVersion.V2;
 
 		ExtraModuleNames.AddRange( new string[] { "BattleOfPyvlandia" } );
 	}
