@@ -10,9 +10,5 @@ class BATTLEOFPYVLANDIA_API AMainGameSession : public AGameSession
 {
 	GENERATED_BODY()
 	
-public:
-
 	virtual void RegisterServer() override;
-
-
 };
