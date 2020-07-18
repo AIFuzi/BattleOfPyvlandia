@@ -10,6 +10,7 @@ void AMainGameSession::RegisterServer()
 
 	UE_LOG(LogTemp, Log, TEXT("Register server ----------------------"));
 	IOnlineSubsystem* SubSystem = IOnlineSubsystem::Get();
+	//if (SubSystem) return;
 
 	IOnlineSessionPtr Session = SubSystem->GetSessionInterface();
 
@@ -18,6 +19,8 @@ void AMainGameSession::RegisterServer()
 	OnlineSettings.bIsLANMatch = false;
 	OnlineSettings.bAllowJoinInProgress = true;
 	OnlineSettings.bShouldAdvertise = true;
+	OnlineSettings.NumPublicConnections = 16;
+	OnlineSettings.bUsesPresence = true;
 
 	Session->CreateSession(0, GameSessionName, OnlineSettings);
 	UE_LOG(LogTemp, Log, TEXT("Session create ----------------------"));
