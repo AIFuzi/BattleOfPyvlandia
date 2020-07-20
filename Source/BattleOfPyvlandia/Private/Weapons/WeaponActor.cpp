@@ -68,6 +68,7 @@ void AWeaponActor::UseWeapon()
 		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
 		break;
 	case EWeaponType::Pistol:
+		GetWorld()->GetTimerManager().SetTimer(CooldownTimer, this, &AWeaponActor::StopCooldown, CooldownDelay, false);
 		GetShootTrace();
 		break;
 	case EWeaponType::SMG:
