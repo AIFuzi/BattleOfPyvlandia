@@ -80,6 +80,8 @@ void AWeaponActor::UseWeapon()
 		CurrentAmmo--;
 		break;
 	}
+
+	OnPlayWeaponEffect.Broadcast();
 }
 
 void AWeaponActor::StopUseWeapon()
@@ -133,8 +135,6 @@ void AWeaponActor::GetShootTrace()
 
 	if (ShotgunShootCount <= 0) CurrentAmmo--;
 	if (CurrentAmmo < 1) StopUseWeapon();
-
-	OnPlayWeaponEffect.Broadcast();
 
 	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
 	if (IsHit)
