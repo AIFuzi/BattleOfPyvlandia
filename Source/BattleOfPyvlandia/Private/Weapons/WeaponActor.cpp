@@ -68,20 +68,23 @@ void AWeaponActor::UseWeapon()
 		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
 		break;
 	case EWeaponType::Pistol:
+		OnPlayWeaponEffect.Broadcast();
 		GetWorld()->GetTimerManager().SetTimer(CooldownTimer, this, &AWeaponActor::StopCooldown, CooldownDelay, false);
 		GetShootTrace();
 		break;
 	case EWeaponType::SMG:
+		OnPlayWeaponEffect.Broadcast();
 		GetWorld()->GetTimerManager().SetTimer(ShootingTimer, this, &AWeaponActor::GetShootTrace, ShootingSpeed, true, 0.f);
 		break;
 	case EWeaponType::Shotgun:
+		OnPlayWeaponEffect.Broadcast();
 		for (int i = 0; i < ShotgunShootCount; i++) GetShootTrace();
 		GetWorld()->GetTimerManager().SetTimer(CooldownTimer, this, &AWeaponActor::StopCooldown, CooldownDelay, false);
 		CurrentAmmo--;
 		break;
 	}
 
-	OnPlayWeaponEffect.Broadcast();
+	
 }
 
 void AWeaponActor::StopUseWeapon()
@@ -136,11 +139,18 @@ void AWeaponActor::GetShootTrace()
 	if (ShotgunShootCount <= 0) CurrentAmmo--;
 	if (CurrentAmmo < 1) StopUseWeapon();
 
+	switch (WeaponType)
+	{
+	case EWeaponType::Autorifle:
+		OnPlayWeaponEffect.Broadcast();
+		break;
+	}
+
 	bool IsHit = GetWorld()->LineTraceSingleByObjectType(HitResult, Start, End, CollisionTrace, CollisionParams);
 	if (IsHit)
 	{
 
-		DrawDebugTrace(Start, End, HitResult.Location);
+		//DrawDebugTrace(Start, End, HitResult.Location);
 		UGameplayStatics::ApplyDamage(HitResult.GetActor(), Damage, GetInstigatorController(), WeaponOwner, UDamageType::StaticClass());
 	}
 }
